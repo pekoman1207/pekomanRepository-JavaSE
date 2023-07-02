@@ -1,0 +1,80 @@
+package IO;
+
+import cn.hutool.core.io.FileUtil;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.ArrayList;
+
+/**
+ *      IO hutool 常用工具 FileUtil類方法 Demo
+ *      FileUtil類
+ *          file 根據參數創建對象 特別的點:不需要父路徑都存在
+ *          touch 根據參數創建文件 特別的點:可以創建好幾個資料夾(接連的)
+ *
+ *          writeLines 把集合中的數據寫進文件 默認覆蓋模式(可加true調成追加)
+ *          appendLines 把集合中的數據寫進文件 默認追加模式
+ *          readLines 把文件中的數據讀到集合裡面 可指定字符編碼
+ *
+ *          copy 拷貝文件or資料夾
+ *
+ *      注意事項:
+ *          不要導錯包
+ */
+public class HutoolDemo01 {
+    public static void main(String[] args) {
+        // file 根據參數創建對象 特別的點:不需要父路徑都存在
+        File file = FileUtil.file("createFileDemo", "layer1", "layer2"); // 文件夾命名:首字母小寫
+        // 印出 C:\Users\sadw1\IdeaProjects\JavaSE\out\production\modulesJavaSE\createFileDemo\layer1\layer2
+        System.out.println(file);
+
+        // touch 根據參數創建文件 特別的點:可以創建好幾個資料夾(接連的)
+        FileUtil.touch(file); // success
+
+        // writeLines 把集合中的數據寫進文件 默認覆蓋模式(可加true調成追加)
+        ArrayList<Object> arrStr = new ArrayList<>();
+        arrStr.add("abc");
+        arrStr.add("123");
+        arrStr.add("中文");
+        File file1 = FileUtil.writeLines(arrStr, new File("textDemo"), "UTF-8");
+        /**
+         *      textDemo裡面的內容:
+         *          abc
+         *          123
+         *          中文
+         */
+        // 印出textDemo (實際路徑是C:\Users\sadw1\IdeaProjects\JavaSE\txtDemo)
+        System.out.println(file1);
+
+        // appendLines 把集合中的數據寫進文件 默認追加模式
+        FileUtil.appendLines(arrStr, file1, "UTF-8");
+        /**
+         *      textDemo裡面的內容:
+         *          abc
+         *          123
+         *          中文
+         *          abc
+         *          123
+         *          中文
+         */
+
+        // readLines 把文件中的數據讀到集合裡面 可指定字符編碼
+        ArrayList<String> arrReadDemo = FileUtil.readLines(file1, "UTF-8", new ArrayList<>());
+        // 印出[abc, 123, 中文, abc, 123, 中文]
+        System.out.println(arrReadDemo);
+
+        // copy 拷貝文件or資料夾
+        FileUtil.copy(file1.toPath(), new File("copyTextDemo").toPath());
+        /**
+         *      copyTextDemo文件內容:
+         *          abc
+         *          123
+         *          中文
+         *          abc
+         *          123
+         *          中文
+         */
+
+
+    }
+}
